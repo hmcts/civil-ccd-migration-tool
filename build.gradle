@@ -1,13 +1,20 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
   id 'application'
-  id 'org.springframework.boot' version '2.1.6.RELEASE'
+  id 'org.springframework.boot' version '2.5.14'
+  id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 }
 
 group = 'uk.gov.hmcts.reform'
-version = '1.0.0'
+version = "1.0.0-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYYMMdd-HHmm"))
 
 sourceCompatibility = '11'
 targetCompatibility = '11'
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
 
 mainClassName = 'uk.gov.hmcts.reform.migration.CaseMigrationRunner'
 
@@ -21,25 +28,27 @@ compileTestJava {
 
 repositories {
   mavenLocal()
+  mavenCentral()
   jcenter()
-
-  maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
-  maven { url "http://repo.maven.apache.org/maven2" }
 }
 
 def versions = [
-  lombok: '1.18.8'
+  lombok: '1.18.24'
 ]
 
 dependencies {
+
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
-  compile group: 'uk.gov.hmcts.reform.ccd-case-migration', name: 'processor', version: '1.0.0'
-  compile group: 'uk.gov.hmcts.reform.ccd-case-migration', name: 'domain', version: '1.0.0'
+  implementation group: 'uk.gov.hmcts.reform.ccd-case-migration', name: 'processor', version: '3.0.0'
+  implementation group: 'uk.gov.hmcts.reform.ccd-case-migration', name: 'domain', version: '3.0.0'
 
-  testCompile group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.5.0'
-  testCompile group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
+  implementation group: 'com.github.hmcts', name: 'ccd-client', version: '4.8.6'
+
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.5.0'
+  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
 }
 
 test {
