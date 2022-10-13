@@ -1,4 +1,4 @@
-# CMC CCD Data Migration Tool
+# Civil CCD Data Migration Tool
 
 ## Basic overview
 
