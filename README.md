@@ -9,7 +9,7 @@ To perform the migration there needs to be an event defined in the consuming cas
 
 This event is then triggered by the `CaseMigrationProcessor` defined in the [hmcts/ccd-case-migration-starter](https://github.com/hmcts/ccd-case-migration-starter),
 and as it is a CCD event it can have the standard CCD hooks, i.e. `about-to-start`, `about-to-submit`, `submitted`.
-CMC makes use of the `about-to-submit` hook to then perform the main part of migration.
+Civil makes use of the `about-to-submit` hook to then perform the main part of migration.
 
 ### More info
 
