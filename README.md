@@ -31,19 +31,19 @@ To run the jar you will need to do the following
 
 ```shell
 java -jar \
--Dspring.application.name="cmc-ccd-case-migration-tool" \
+-Dspring.application.name="civil-ccd-case-migration-tool" \
 -Didam.api.url="https://idam-api.aat.platform.hmcts.net" \
--Didam.client.id="cmc_citizen" \
+-Didam.client.id="[CLIENT ID]" \
 -Didam.client.secret="[VALUE IN VAULT]" \
--Didam.client.redirect_uri="https://cmc-claim-store-aat.service.core-compute-aat.internal/oauth2/callback" \
+-Didam.client.redirect_uri="https://civil-service-aat.service.core-compute-aat.internal/oauth2/callback" \
 -Dcore_case_data.api.url="http://ccd-data-store-api-aat.service.core-compute-aat.internal" \
 -Didam.s2s-auth.url="http://rpe-service-auth-provider-aat.service.core-compute-aat.internal" \
--Didam.s2s-auth.microservice="cmc_claim_store" \
+-Didam.s2s-auth.microservice="civil-service" \
 -Didam.s2s-auth.totp_secret="[VALUE IN VAULT]" \
 -Dmigration.idam.username="cmc-system-update@mailnesia.com" \
 -Dmigration.idam.password="[VALUE IN VAULT]" \
--Dmigration.jurisdiction="CMC" \
--Dmigration.caseType="MoneyClaimCase" \
+-Dmigration.jurisdiction="Civil" \
+-Dmigration.caseType="[CASE TYPE]" \
 -Dlogging.level.root="ERROR" \
 -Dlogging.level.uk.gov.hmcts.reform="INFO" \
 -Dfeign.client.config.default.connectTimeout="60000" \
@@ -57,7 +57,7 @@ where
 - `idam.s2s-auth.totp_secret`
 - `migration.idam.password`
 
-can all be found in the fpl-case-service vault.
+can all be found in the relevant vault.
 
 Note that the parameters given are using AAT environment as an example.
 
