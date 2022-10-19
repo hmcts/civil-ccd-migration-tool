@@ -4,26 +4,30 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Component
 public class DataMigrationServiceImpl implements DataMigrationService<Map<String, Object>> {
 
-    private static final String MIGRATION_ID = "YOUR_MIGRATION_ID_HERE";
-
+    private static final String MIGRATION_ID_KEY = "migrationId";
+    private static final String MIGRATION_ID_VALUE = "AccessProfileMigration";
     @Override
     public Predicate<CaseDetails> accepts() {
-        /*
-         Implement filter here that selects the cases to be migrated.
-        */
-        throw new UnsupportedOperationException("not yet implemented");
+        return caseDetails -> Optional.ofNullable(caseDetails)
+            .filter(caseAlreadyProcessed())
+            .isPresent();
     }
 
+    private Predicate<CaseDetails> caseAlreadyProcessed() {
+        return caseDetails -> !caseDetails.getData().containsKey(MIGRATION_ID_KEY)
+            || !caseDetails.getData().getOrDefault(MIGRATION_ID_KEY, "").equals(MIGRATION_ID_VALUE);
+    }
     @Override
     public Map<String, Object> migrate(Map<String, Object> data) {
         /*
          Populate a map here with data that wants to be present when connecting with the callback service.
         */
-        return Map.of("migrationId", MIGRATION_ID);
+        return Map.of(MIGRATION_ID_KEY, MIGRATION_ID_VALUE);
     }
 }
