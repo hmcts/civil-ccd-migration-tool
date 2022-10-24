@@ -8,10 +8,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @Component
-public class DataMigrationServiceImpl implements DataMigrationService<Map<String, Object>> {
+public class DataMigrationServiceImpl implements DataMigrationService<CaseDetails> {
 
     private static final String MIGRATION_ID_KEY = "migrationId";
     private static final String MIGRATION_ID_VALUE = "AccessProfileMigration";
+
     @Override
     public Predicate<CaseDetails> accepts() {
         return caseDetails -> Optional.ofNullable(caseDetails)
@@ -23,11 +24,15 @@ public class DataMigrationServiceImpl implements DataMigrationService<Map<String
         return caseDetails -> !caseDetails.getData().containsKey(MIGRATION_ID_KEY)
             || !caseDetails.getData().getOrDefault(MIGRATION_ID_KEY, "").equals(MIGRATION_ID_VALUE);
     }
+
     @Override
-    public Map<String, Object> migrate(Map<String, Object> data) {
+    public CaseDetails migrate(CaseDetails caseDetails) {
         /*
          Populate a map here with data that wants to be present when connecting with the callback service.
         */
-        return Map.of(MIGRATION_ID_KEY, MIGRATION_ID_VALUE);
+        Map<String, Object> data = caseDetails.getData();
+        data.put(MIGRATION_ID_KEY, MIGRATION_ID_VALUE);
+        caseDetails.setData(data);
+        return caseDetails;
     }
 }
