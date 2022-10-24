@@ -3,6 +3,8 @@ core_case_data:
     url: ${CCD_DATA_STORE_API_BASE_URL:http://localhost:4452}
 
 idam:
+  username: ${IDAM_USERNAME}
+  password: ${IDAM_PASSWORD}
   api:
     url: ${IDAM_API_URL:http://localhost:5000}
   client:
@@ -16,17 +18,13 @@ idam:
     url: ${IDAM_S2S_URL:http://localhost:4502}
 
 migration:
-  caseIds:
-  caseType: ${MIGRATION_CASETYPE}
-  dryRun: false
-  idam:
-    password: ${IDAM_PASS}
-    username: ${IDAM_USER}
+  caseIds: ${MIGRATION_CASE_IDS:}
+  caseType: ${MIGRATION_CASE_TYPE}
+  dryRun: ${MIGRATION_DRY_RUN:false}
   maxCasesToProcess: ${MIGRATION_CASE_LIMIT:50000}
-  numThreads: 10
-  elasticsearch:
-    enabled: false
-    querySize: ${MIGRATION_QUERY_SIZE:10000}
+  numThreads: ${MIGRATION_NO_OF_THREADS:20}
+  esEnabled: ${MIGRATION_ES_ENABLED:false}
+  esQuerySize: ${MIGRATION_ES_QUERY_SIZE:500}
 
 spring:
   application:

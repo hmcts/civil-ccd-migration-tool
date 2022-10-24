@@ -7,7 +7,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
+import uk.gov.hmcts.reform.domain.exception.MigrationLimitReachedException;
 import uk.gov.hmcts.reform.idam.client.models.User;
+import uk.gov.hmcts.reform.migration.processor.MigrationProcessor;
 import uk.gov.hmcts.reform.migration.repository.IdamRepository;
 
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.stream.Stream;
 public class CaseMigrationRunner implements CommandLineRunner {
 
     @Autowired
-    private CaseMigrationProcessor caseMigrationProcessor;
+    private MigrationProcessor migrationProcessor;
     @Autowired
     private MigrationProperties migrationProperties;
     @Autowired
@@ -46,20 +48,21 @@ public class CaseMigrationRunner implements CommandLineRunner {
                     .stream()
                     .map(String::trim)
                     .forEach(caseId -> {
-                        caseMigrationProcessor.migrateSingleCase(user, caseId);
+                        migrationProcessor.migrateSingleCase(user, caseId);
                     });
             } else {
                 log.info("Data migration of cases started");
-                caseMigrationProcessor.process(user);
+                migrationProcessor.process(user);
             }
-
+        } catch (MigrationLimitReachedException ex) {
+            log.info("Data migration stopped after limit reached");
         } catch (Exception e) {
             log.error("Migration failed with the following reason: {}", e.getMessage(), e);
         } finally {
             stopWatch.stop();
             log.info("-----------------------------------------");
             log.info("Data migration completed in: {} minutes ({} seconds).",
-                     stopWatch.getTime(TimeUnit.MINUTES), stopWatch.getTime(TimeUnit.SECONDS)
+                stopWatch.getTime(TimeUnit.MINUTES), stopWatch.getTime(TimeUnit.SECONDS)
             );
             log.info("-----------------------------------------");
         }

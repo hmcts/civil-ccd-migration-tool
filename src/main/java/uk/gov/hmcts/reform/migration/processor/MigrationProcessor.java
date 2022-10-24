@@ -1,13 +1,18 @@
-package uk.gov.hmcts.reform.migration;
+package uk.gov.hmcts.reform.migration.processor;
 
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.domain.exception.CaseMigrationException;
+import uk.gov.hmcts.reform.domain.exception.MigrationLimitReachedException;
 import uk.gov.hmcts.reform.idam.client.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 public interface MigrationProcessor {
+    int DEFAULT_MAX_CASES_TO_PROCESS = 100000;
+    int DEFAULT_THREAD_LIMIT = 20;
     String EVENT_ID = "migrateCase";
     String EVENT_SUMMARY = "Migrate Case";
     String EVENT_DESCRIPTION = "Migrate Case";
@@ -26,5 +31,16 @@ public interface MigrationProcessor {
         }
     }
 
+    default void assertLimitReached(Long id, int maxCasesToProcessLimit) {
+        if (migratedCases.size() > maxCasesToProcessLimit) {
+            String message = format("Stopping at case id %s as migration limit of %s configured is reached",
+                id,
+                maxCasesToProcessLimit);
+            throw new MigrationLimitReachedException(message);
+        }
+    }
+
     void process(User user) throws InterruptedException;
+
+    void migrateSingleCase(User user, String caseId);
 }

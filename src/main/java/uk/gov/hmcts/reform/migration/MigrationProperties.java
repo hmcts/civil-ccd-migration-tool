@@ -16,4 +16,7 @@ public class MigrationProperties {
     private Integer numThreads;
     private boolean dryRun;
     private String caseIds;
+
+    private Integer esQuerySize;
+    private Boolean esEnabled;
 }
