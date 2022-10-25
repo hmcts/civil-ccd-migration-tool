@@ -27,7 +27,7 @@ import static java.util.Optional.ofNullable;
 @ConditionalOnProperty(prefix = "migration", name = "esEnabled", havingValue = "false")
 public class CaseMigrationProcessor implements MigrationProcessor {
     private final CoreCaseDataService coreCaseDataService;
-    private final DataMigrationService<CaseDetails> dataMigrationService;
+    private final DataMigrationService<?> dataMigrationService;
     private final MigrationProperties migrationProperties;
 
     @Override
