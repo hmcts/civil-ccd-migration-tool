@@ -14,50 +14,27 @@ public class ElasticSearchQueryTest {
 
     @Test
     public void shouldReturnQuery() {
-        ElasticSearchQuery elasticSearchQuery =  ElasticSearchQuery.builder()
+        ElasticSearchQuery elasticSearchQuery = ElasticSearchQuery.builder()
             .initialSearch(true)
             .size(QUERY_SIZE)
             .build();
         String query = elasticSearchQuery.getQuery();
-        assertEquals("{\n"
-                         + "  \"query\": {\n"
-                         + "    \"match_all\": {}\n"
-                         + "  },\n"
-                         + "  \"_source\": [\n"
-                         + "    \"reference\"\n"
-                         + "  ],\n"
-                         + "  \"size\": 100,\n"
-                         + "  \"sort\": [\n"
-                         + "    {\n"
-                         + "      \"reference.keyword\": \"asc\"\n"
-                         + "    }\n"
-                         + "  ]\n"
-                         + "\n"
-                         + "}", query);
+        assertEquals("{          \"query\": {            \"match_all\": {}          },          \"_source\": "
+            + "[            \"reference\"          ],          \"size\": 100,          \"sort\": [            {        "
+            + "      \"reference.keyword\": \"asc\"            }          ]\n}", query);
     }
 
     @Test
     public void shouldReturnSearchAfterQuery() {
-        ElasticSearchQuery elasticSearchQuery =  ElasticSearchQuery.builder()
+        ElasticSearchQuery elasticSearchQuery = ElasticSearchQuery.builder()
             .initialSearch(false)
             .size(QUERY_SIZE)
             .searchAfterValue("1677777777")
             .build();
         String query = elasticSearchQuery.getQuery();
-        assertEquals("{\n"
-                         + "  \"query\": {\n"
-                         + "    \"match_all\": {}\n"
-                         + "  },\n"
-                         + "  \"_source\": [\n"
-                         + "    \"reference\"\n"
-                         + "  ],\n"
-                         + "  \"size\": 100,\n"
-                         + "  \"sort\": [\n"
-                         + "    {\n"
-                         + "      \"reference.keyword\": \"asc\"\n"
-                         + "    }\n"
-                         + "  ]\n"
-                         + ",\"search_after\": [1677777777]\n"
-                         + "}", query);
+        assertEquals("{          \"query\": {            \"match_all\": {}          },          \"_source\":"
+            + " [            \"reference\"          ],          \"size\": 100,          \"sort\": [            {     "
+            + "         \"reference.keyword\": \"asc\"            }          ],\"search_after\": [1677777777]\n"
+            + "}", query);
     }
 }
