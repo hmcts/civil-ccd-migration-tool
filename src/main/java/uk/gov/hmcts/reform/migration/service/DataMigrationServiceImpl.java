@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @Component
-public class DataMigrationServiceImpl implements DataMigrationService<CaseDetails> {
+public class DataMigrationServiceImpl implements DataMigrationService<Map<String, Object>> {
 
     private static final String MIGRATION_ID_KEY = "migrationId";
     private static final String MIGRATION_ID_VALUE = "AccessProfileMigration";
@@ -26,13 +26,10 @@ public class DataMigrationServiceImpl implements DataMigrationService<CaseDetail
     }
 
     @Override
-    public CaseDetails migrate(CaseDetails caseDetails) {
+    public Map<String, Object> migrate(CaseDetails caseDetails) {
         /*
          Populate a map here with data that wants to be present when connecting with the callback service.
         */
-        Map<String, Object> data = caseDetails.getData();
-        data.put(MIGRATION_ID_KEY, MIGRATION_ID_VALUE);
-        caseDetails.setData(data);
-        return caseDetails;
+        return Map.of(MIGRATION_ID_KEY, MIGRATION_ID_VALUE);
     }
 }

@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.PaginatedSearchMetadata;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
+import uk.gov.hmcts.reform.idam.client.models.User;
 import uk.gov.hmcts.reform.idam.client.models.UserDetails;
 import uk.gov.hmcts.reform.migration.MigrationProperties;
 import uk.gov.hmcts.reform.migration.auth.AuthUtil;
@@ -108,5 +109,47 @@ public class CoreCaseDataService {
             true,
             caseDataContent
         );
+    }
+
+    public CaseDetails update(User user,
+                              CaseDetails caseDetails,
+                              String caseType,
+                              String eventId,
+                              String eventSummary,
+                              String eventDescription,
+                              Object migratedData) {
+
+        UserDetails userDetails = user.getUserDetails();
+        String authorisation = user.getAuthToken();
+        String caseId = caseDetails.getId().toString();
+        StartEventResponse startEventResponse = coreCaseDataApi.startEventForCaseWorker(
+            AuthUtil.getBearerToken(authorisation),
+            authTokenGenerator.generate(),
+            userDetails.getId(),
+            caseDetails.getJurisdiction(),
+            caseType,
+            caseId,
+            eventId);
+
+        CaseDataContent caseDataContent = CaseDataContent.builder()
+            .eventToken(startEventResponse.getToken())
+            .event(
+                Event.builder()
+                    .id(startEventResponse.getEventId())
+                    .summary(eventSummary)
+                    .description(eventDescription)
+                    .build()
+            ).data(migratedData)
+            .build();
+
+        return coreCaseDataApi.submitEventForCaseWorker(
+            AuthUtil.getBearerToken(authorisation),
+            authTokenGenerator.generate(),
+            userDetails.getId(),
+            caseDetails.getJurisdiction(),
+            caseType,
+            caseId,
+            true,
+            caseDataContent);
     }
 }

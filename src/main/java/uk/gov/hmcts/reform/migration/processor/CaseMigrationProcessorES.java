@@ -45,7 +45,7 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
                 caseId
             ).orElseThrow(CaseNotFoundException::new);
             if (dataMigrationService.accepts().test(caseDetails)) {
-                updateCase(userToken, caseDetails);
+                updateCase(user, caseDetails);
             } else {
                 log.info("Case {} already migrated", caseDetails.getId());
             }
@@ -73,7 +73,7 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
                 List<CaseDetails> searchResultCases = searchResult.getCases();
                 searchResultCases
                     .stream()
-                    .forEach(submitMigration(authToken, executorService));
+                    .forEach(submitMigration(user, executorService));
                 String searchAfterValue = searchResultCases.get(searchResultCases.size() - 1).getId().toString();
 
                 boolean keepSearching;
@@ -89,7 +89,7 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
                         List<CaseDetails> subsequentSearchResultCases = subsequentSearchResult.getCases();
                         subsequentSearchResultCases
                             .stream()
-                            .forEach(submitMigration(authToken, executorService));
+                            .forEach(submitMigration(user, executorService));
                         keepSearching = subsequentSearchResultCases.size() > 0;
                         if (keepSearching) {
                             searchAfterValue = subsequentSearchResultCases
@@ -106,10 +106,10 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
         }
     }
 
-    private Consumer<CaseDetails> submitMigration(String authToken, ExecutorService executorService) {
+    private Consumer<CaseDetails> submitMigration(User user, ExecutorService executorService) {
         return caseDetails -> {
             log.info("Submitting task for migration of case  {}.", caseDetails.getId());
-            executorService.submit(() -> updateCase(authToken, caseDetails));
+            executorService.submit(() -> updateCase(user, caseDetails));
         };
     }
 
@@ -146,9 +146,9 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
         return subsequentSearchResult;
     }
 
-    private void updateCase(String userToken, CaseDetails caseDetails) {
+    private void updateCase(User user, CaseDetails caseDetails) {
         Long id = caseDetails.getId();
-        log.info("Updating case {}", id);
+        log.info("Updating case {}", caseDetails.getId());
         int maxCasesToProcessLimit = ofNullable(migrationProperties.getMaxCasesToProcess())
             .orElse(DEFAULT_MAX_CASES_TO_PROCESS);
         assertLimitReached(id, maxCasesToProcessLimit);
@@ -156,8 +156,9 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
             log.debug("Case data: {}", caseDetails.getData());
             if (!migrationProperties.isDryRun()) {
                 coreCaseDataService.update(
-                    userToken,
-                    id.toString(),
+                    user,
+                    caseDetails,
+                    migrationProperties.getCaseType(),
                     EVENT_ID,
                     EVENT_SUMMARY,
                     EVENT_DESCRIPTION,

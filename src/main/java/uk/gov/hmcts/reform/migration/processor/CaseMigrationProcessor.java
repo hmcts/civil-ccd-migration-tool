@@ -46,7 +46,7 @@ public class CaseMigrationProcessor implements MigrationProcessor {
                 )
                 .flatMap(pageNumber -> coreCaseDataService.fetchPage(authToken, userId, pageNumber).stream())
                 .filter(dataMigrationService.accepts())
-                .forEach(submitMigration(authToken, executorService));
+                .forEach(submitMigration(user, executorService));
 
         } catch (MigrationLimitReachedException ex) {
             throw ex;
@@ -57,10 +57,10 @@ public class CaseMigrationProcessor implements MigrationProcessor {
         }
     }
 
-    private Consumer<CaseDetails> submitMigration(String authToken, ExecutorService executorService) {
+    private Consumer<CaseDetails> submitMigration(User user, ExecutorService executorService) {
         return caseDetails -> {
             log.info("Submitting task for migration of case  {}.", caseDetails.getId());
-            executorService.submit(() -> updateCase(authToken, caseDetails));
+            executorService.submit(() -> updateCase(user, caseDetails));
         };
     }
 
@@ -73,7 +73,7 @@ public class CaseMigrationProcessor implements MigrationProcessor {
                 caseId
             ).orElseThrow(CaseNotFoundException::new);
             if (dataMigrationService.accepts().test(caseDetails)) {
-                updateCase(userToken, caseDetails);
+                updateCase(user, caseDetails);
             } else {
                 log.info("Case {} already migrated", caseDetails.getId());
             }
@@ -86,7 +86,7 @@ public class CaseMigrationProcessor implements MigrationProcessor {
         }
     }
 
-    private void updateCase(String userToken, CaseDetails caseDetails) {
+    private void updateCase(User user, CaseDetails caseDetails) {
         Long id = caseDetails.getId();
         log.info("Updating case {}", id);
         int maxCasesToProcessLimit = ofNullable(migrationProperties.getMaxCasesToProcess())
@@ -96,8 +96,9 @@ public class CaseMigrationProcessor implements MigrationProcessor {
             log.debug("Case data: {}", caseDetails.getData());
             if (!migrationProperties.isDryRun()) {
                 coreCaseDataService.update(
-                    userToken,
-                    id.toString(),
+                    user,
+                    caseDetails,
+                    migrationProperties.getCaseType(),
                     EVENT_ID,
                     EVENT_SUMMARY,
                     EVENT_DESCRIPTION,
