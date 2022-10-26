@@ -9,6 +9,27 @@ This event `migrateCase` is then triggered by the `CaseMigrationProcessor`and as
 i.e. `about-to-start`, `about-to-submit`, `submitted`.
 Civil makes use of the `about-to-submit` hook to then perform the main part of migration.
 
+### Features
+- Ability to migrate single case by providing the CCD case Id i.e. `migration.caseIds=1234`
+- Ability to migrate list of cases by providing comma separated list of case Ids i.e. `migration.caseIds=1234,56789`
+- Ability to `dryRun` which should not invoke the update case, but still give us the count that will be migrated with actual run
+- Ability to stop when reached to maximum no of cases to process. this can can be configured before each run using `migration.maxCasesToProcess`
+- Performance improvements to fetch cases page by page bases and then process/migrate cases in parallel. Have ability to configure the number of threads `numThreads`
+- Performance improvements to use elastic search while fetching the cases.
+- Ability to turn on/off elastic search as we do't have ES for all of our lower environments. i.e. `migration.esEnabled=true`
+- Further more ability to configure the query size for ES. i.e. `migration.esQuerySize=500`
+-
+### Configuration properties
+```yaml
+migration:
+  caseIds: ${MIGRATION_CASE_IDS:}
+  caseType: ${MIGRATION_CASE_TYPE}
+  dryRun: ${MIGRATION_DRY_RUN:false}
+  maxCasesToProcess: ${MIGRATION_CASE_LIMIT:50000}
+  numThreads: ${MIGRATION_NO_OF_THREADS:20}
+  esEnabled: ${MIGRATION_ES_ENABLED:false}
+  esQuerySize: ${MIGRATION_ES_QUERY_SIZE:500}
+```
 ### Processor framework
 
 The migration framework for data migrations within CCD that runs the following process:
