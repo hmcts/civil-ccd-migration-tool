@@ -12,6 +12,7 @@ public class DataMigrationServiceImpl implements DataMigrationService<Map<String
 
     private static final String MIGRATION_ID_KEY = "migrationId";
     private static final String MIGRATION_ID_VALUE = "AccessProfileMigration";
+
     @Override
     public Predicate<CaseDetails> accepts() {
         return caseDetails -> Optional.ofNullable(caseDetails)
@@ -23,8 +24,9 @@ public class DataMigrationServiceImpl implements DataMigrationService<Map<String
         return caseDetails -> !caseDetails.getData().containsKey(MIGRATION_ID_KEY)
             || !caseDetails.getData().getOrDefault(MIGRATION_ID_KEY, "").equals(MIGRATION_ID_VALUE);
     }
+
     @Override
-    public Map<String, Object> migrate(Map<String, Object> data) {
+    public Map<String, Object> migrate(CaseDetails caseDetails) {
         /*
          Populate a map here with data that wants to be present when connecting with the callback service.
         */

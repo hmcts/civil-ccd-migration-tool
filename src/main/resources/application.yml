@@ -1,0 +1,45 @@
+core_case_data:
+  api:
+    url: ${CCD_DATA_STORE_API_BASE_URL:http://localhost:4452}
+
+idam:
+  username: ${IDAM_USERNAME}
+  password: ${IDAM_PASSWORD}
+  api:
+    url: ${IDAM_API_URL:http://localhost:5000}
+  client:
+    id: ${IDAM_CLIENT_ID:ccd_gateway}
+    redirect_uri: http://localhost:3451/oauth2redirect
+    scope: profile openid roles manage-user
+    secret: ${IDAM_OAUTH2_DATA_STORE_CLIENT_SECRET:ccd_gateway_secret}
+  s2s-auth:
+    microservice: ccd_data
+    totp_secret: ${DATA_STORE_IDAM_KEY:AAAAAAAAAAAAAAAB}
+    url: ${IDAM_S2S_URL:http://localhost:4502}
+
+migration:
+  caseIds: ${MIGRATION_CASE_IDS:}
+  caseType: ${MIGRATION_CASE_TYPE}
+  dryRun: ${MIGRATION_DRY_RUN:false}
+  maxCasesToProcess: ${MIGRATION_CASE_LIMIT:50000}
+  numThreads: ${MIGRATION_NO_OF_THREADS:20}
+  esEnabled: ${MIGRATION_ES_ENABLED:false}
+  esQuerySize: ${MIGRATION_ES_QUERY_SIZE:500}
+
+spring:
+  application:
+    name: ccd-case-migration-tool
+logging:
+  level:
+    root: ERROR
+    uk:
+      gov:
+        hmcts:
+          reform: INFO
+          reform.migration: ${log.level:INFO}
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 60000
