@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.PropertySource;
 import uk.gov.hmcts.reform.domain.exception.MigrationLimitReachedException;
 import uk.gov.hmcts.reform.idam.client.models.User;
@@ -20,6 +21,8 @@ import java.util.stream.Stream;
 @Slf4j
 @SpringBootApplication
 @PropertySource("classpath:application.yml")
+@EnableFeignClients(basePackages = {
+    "uk.gov.hmcts.reform.idam.client"})
 public class CaseMigrationRunner implements CommandLineRunner {
 
     @Autowired
