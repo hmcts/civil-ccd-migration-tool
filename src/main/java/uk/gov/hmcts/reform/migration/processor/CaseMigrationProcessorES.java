@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
@@ -71,9 +72,11 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
                 ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
 
                 List<CaseDetails> searchResultCases = searchResult.getCases();
+                log.info("Found {} cases on first page", searchResultCases.size());
                 searchResultCases
                     .stream()
                     .forEach(submitMigration(user, executorService));
+                // get last case from first page
                 String searchAfterValue = searchResultCases.get(searchResultCases.size() - 1).getId().toString();
 
                 boolean keepSearching;
@@ -83,6 +86,8 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
                         caseType,
                         searchAfterValue,
                         querySize);
+
+                    log.info("Found {} cases on next page {}", subsequentSearchResult.getCases().size(), subsequentSearchResult.getCases().stream().map(c -> c.getId().toString()).collect(Collectors.toList()));
 
                     keepSearching = false;
                     if (subsequentSearchResult != null) {
