@@ -31,7 +31,7 @@ import static java.util.Optional.ofNullable;
 public class CaseMigrationProcessorES implements MigrationProcessor {
 
     private final AuthTokenGenerator authTokenGenerator;
-    private final DataMigrationService<CaseDetails> dataMigrationService;
+    private final DataMigrationService<?> dataMigrationService;
     private final CoreCaseDataService coreCaseDataService;
     private final CoreCaseDataApi coreCaseDataApi;
     private final MigrationProperties migrationProperties;
