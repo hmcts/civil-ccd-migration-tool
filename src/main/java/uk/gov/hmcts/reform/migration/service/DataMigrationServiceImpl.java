@@ -21,6 +21,7 @@ public class DataMigrationServiceImpl implements DataMigrationService<Map<String
     }
 
     private Predicate<CaseDetails> caseAlreadyProcessed() {
+
         return caseDetails -> !caseDetails.getData().containsKey(MIGRATION_ID_KEY)
             || !caseDetails.getData().getOrDefault(MIGRATION_ID_KEY, "").equals(MIGRATION_ID_VALUE);
     }
