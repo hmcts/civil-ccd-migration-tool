@@ -21,7 +21,7 @@ migration:
   caseIds: ${MIGRATION_CASE_IDS:}
   caseType: ${MIGRATION_CASE_TYPE}
   dryRun: ${MIGRATION_DRY_RUN:false}
-  maxCasesToProcess: ${MIGRATION_CASE_LIMIT:50000}
+  maxCasesToProcess: ${MIGRATION_CASE_LIMIT:80000}
   numThreads: ${MIGRATION_NO_OF_THREADS:20}
   esEnabled: ${MIGRATION_ES_ENABLED:false}
   esQuerySize: ${MIGRATION_ES_QUERY_SIZE:500}
