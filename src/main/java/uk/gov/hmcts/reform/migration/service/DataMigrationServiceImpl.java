@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 public class DataMigrationServiceImpl implements DataMigrationService<Map<String, Object>> {
 
     private static final String MIGRATION_ID_KEY = "migrationId";
-    private static final String MIGRATION_ID_VALUE = "GSMigration";
+    private static final String MIGRATION_ID_VALUE = "GACaseProgressionMigration";
 
     @Override
     public Predicate<CaseDetails> accepts() {

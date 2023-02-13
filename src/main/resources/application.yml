@@ -1,22 +1,20 @@
 core_case_data:
   api:
     url: ${CCD_DATA_STORE_API_BASE_URL:http://localhost:4452}
-
 idam:
   username: ${IDAM_USERNAME}
   password: ${IDAM_PASSWORD}
+
   api:
     url: ${IDAM_API_URL:http://localhost:5000}
   client:
-    id: ${IDAM_CLIENT_ID:ccd_gateway}
-    redirect_uri: http://localhost:3451/oauth2redirect
-    scope: profile openid roles manage-user
-    secret: ${IDAM_OAUTH2_DATA_STORE_CLIENT_SECRET:ccd_gateway_secret}
+    id: civil
+    redirect_uri: https://localhost:9000/oauth2/callback
+    secret: OOOOOOOOOOOOOOOO
   s2s-auth:
-    microservice: ccd_data
-    totp_secret: ${DATA_STORE_IDAM_KEY:AAAAAAAAAAAAAAAB}
+    microservice: civil_service
+    totp_secret: AABBCCDDEEFFGGHH
     url: ${IDAM_S2S_URL:http://localhost:4502}
-
 migration:
   caseIds: ${MIGRATION_CASE_IDS:}
   caseType: ${MIGRATION_CASE_TYPE}
