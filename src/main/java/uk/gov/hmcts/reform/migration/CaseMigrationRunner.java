@@ -1,13 +1,14 @@
 package uk.gov.hmcts.reform.migration;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.domain.exception.MigrationLimitReachedException;
 import uk.gov.hmcts.reform.idam.client.models.User;
 import uk.gov.hmcts.reform.migration.processor.MigrationProcessor;
@@ -23,14 +24,14 @@ import java.util.stream.Stream;
 @PropertySource("classpath:application.yml")
 @EnableFeignClients(basePackages = {
     "uk.gov.hmcts.reform.idam.client"})
+@RequiredArgsConstructor
 public class CaseMigrationRunner implements CommandLineRunner {
 
-    @Autowired
-    private MigrationProcessor migrationProcessor;
-    @Autowired
-    private MigrationProperties migrationProperties;
-    @Autowired
-    private IdamRepository idamRepository;
+    private final MigrationProcessor migrationProcessor;
+    private final MigrationProperties migrationProperties;
+    private final IdamRepository idamRepository;
+
+    private final CaseIdsFileReader caseIdsFileReader;
 
     public static void main(String[] args) {
         SpringApplication.run(CaseMigrationRunner.class, args);
@@ -42,8 +43,17 @@ public class CaseMigrationRunner implements CommandLineRunner {
         try {
             User user = idamRepository.authenticateUser();
             log.info("User authentication successful.");
-            if (migrationProperties.getCaseIds() != null && !migrationProperties.getCaseIds().isBlank()) {
-                log.info("Data migration of cases started: " + migrationProperties.getCaseIds());
+            var caseIds = caseIdsFileReader.readCaseIds();
+            if (!CollectionUtils.isEmpty(caseIds)) {
+                log.info("Data migration of cases from file caseIds.txt started: " + migrationProperties.getCaseIds());
+                caseIds
+                    .stream()
+                    .map(String::trim)
+                    .forEach(caseId -> {
+                        migrationProcessor.migrateSingleCase(user, caseId);
+                    });
+            } else if (migrationProperties.getCaseIds() != null && !migrationProperties.getCaseIds().isBlank()) {
+                log.info("Data migration of cases from caseIds property started: " + migrationProperties.getCaseIds());
                 List<String> caseIdsList = Stream.of(migrationProperties.getCaseIds().split(","))
                     .map(String::trim)
                     .collect(Collectors.toList());

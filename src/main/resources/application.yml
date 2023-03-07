@@ -10,7 +10,7 @@ idam:
   client:
     id: ${IDAM_CLIENT_ID:ccd_gateway}
     redirect_uri: http://localhost:3451/oauth2redirect
-    scope: profile openid roles manage-user
+    scope: profile openid roles
     secret: ${IDAM_OAUTH2_DATA_STORE_CLIENT_SECRET:ccd_gateway_secret}
   s2s-auth:
     microservice: ccd_data
