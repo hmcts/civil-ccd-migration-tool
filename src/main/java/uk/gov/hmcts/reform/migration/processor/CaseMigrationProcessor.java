@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.migration.ccd.CoreCaseDataService;
 import uk.gov.hmcts.reform.migration.service.DataMigrationService;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,7 @@ import static java.util.Optional.ofNullable;
 @ConditionalOnProperty(prefix = "migration", name = "esEnabled", havingValue = "false")
 public class CaseMigrationProcessor implements MigrationProcessor {
     private final CoreCaseDataService coreCaseDataService;
-    private final DataMigrationService<?> dataMigrationService;
+    private final DataMigrationService<Map<String, Object>> dataMigrationService;
     private final MigrationProperties migrationProperties;
 
     @Override
@@ -99,9 +100,9 @@ public class CaseMigrationProcessor implements MigrationProcessor {
                     user,
                     caseDetails,
                     migrationProperties.getCaseType(),
-                    EVENT_ID,
-                    EVENT_SUMMARY,
-                    EVENT_DESCRIPTION,
+                    migrationProperties.getEventId(),
+                    migrationProperties.getEventSummary(),
+                    migrationProperties.getEventDescription(),
                     dataMigrationService.migrate(caseDetails)
                 );
                 log.info("Case {} successfully updated", id);

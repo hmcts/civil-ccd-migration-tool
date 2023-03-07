@@ -117,7 +117,7 @@ public class CoreCaseDataService {
                               String eventId,
                               String eventSummary,
                               String eventDescription,
-                              Object migratedData) {
+                              Map<String, Object> migratedData) {
 
         UserDetails userDetails = user.getUserDetails();
         String authorisation = user.getAuthToken();
@@ -131,6 +131,8 @@ public class CoreCaseDataService {
             caseId,
             eventId);
 
+        var payload = new HashMap<>(startEventResponse.getCaseDetails().getData());
+        payload.putAll(migratedData);
         CaseDataContent caseDataContent = CaseDataContent.builder()
             .eventToken(startEventResponse.getToken())
             .event(
@@ -139,7 +141,7 @@ public class CoreCaseDataService {
                     .summary(eventSummary)
                     .description(eventDescription)
                     .build()
-            ).data(migratedData)
+            ).data(payload)
             .build();
 
         return coreCaseDataApi.submitEventForCaseWorker(

@@ -18,12 +18,16 @@ Civil makes use of the `about-to-submit` hook to then perform the main part of m
 - Performance improvements to use elastic search while fetching the cases.
 - Ability to turn on/off elastic search as we do't have ES for all of our lower environments. i.e. `migration.esEnabled=true`
 - Further more ability to configure the query size for ES. i.e. `migration.esQuerySize=500`
--
+- We can configure what event we need to fire, by default it uses `migrateCase` CCD event.
 ### Configuration properties
 ```yaml
 migration:
+  id: ${MIGRATION_ID}
   caseIds: ${MIGRATION_CASE_IDS:}
   caseType: ${MIGRATION_CASE_TYPE}
+  eventId: ${MIGRATION_CASE_EVENT_ID:migrateCase}
+  eventDescription: ${MIGRATION_CASE_EVENT_DESC:Migrate Case}
+  eventSummary: ${MIGRATION_CASE_EVENT_SUMMARY:Migrate Case}
   dryRun: ${MIGRATION_DRY_RUN:false}
   maxCasesToProcess: ${MIGRATION_CASE_LIMIT:50000}
   numThreads: ${MIGRATION_NO_OF_THREADS:20}
@@ -63,6 +67,7 @@ java -jar \
 -Didam.s2s-auth.totp_secret="[VALUE IN VAULT]" \
 -Didam.username="cmc-system-update@mailnesia.com" \
 -Didam.password="[VALUE IN VAULT]" \
+-Dmigration.id="My Migration" \
 -Dmigration.jurisdiction="Civil" \
 -Dmigration.caseType="[CASE TYPE]" \
 -Dmigration.esEnabled="[true/false]" \
