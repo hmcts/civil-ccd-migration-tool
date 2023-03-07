@@ -22,6 +22,7 @@ Civil makes use of the `about-to-submit` hook to then perform the main part of m
 ### Configuration properties
 ```yaml
 migration:
+  id: ${MIGRATION_ID}
   caseIds: ${MIGRATION_CASE_IDS:}
   caseType: ${MIGRATION_CASE_TYPE}
   eventId: ${MIGRATION_CASE_EVENT_ID:migrateCase}
@@ -66,6 +67,7 @@ java -jar \
 -Didam.s2s-auth.totp_secret="[VALUE IN VAULT]" \
 -Didam.username="cmc-system-update@mailnesia.com" \
 -Didam.password="[VALUE IN VAULT]" \
+-Dmigration.id="My Migration" \
 -Dmigration.jurisdiction="Civil" \
 -Dmigration.caseType="[CASE TYPE]" \
 -Dmigration.esEnabled="[true/false]" \
