@@ -18,6 +18,7 @@ idam:
     url: ${IDAM_S2S_URL:http://localhost:4502}
 
 migration:
+  id: ${MIGRATION_ID}
   caseIds: ${MIGRATION_CASE_IDS:}
   caseType: ${MIGRATION_CASE_TYPE}
   eventId: ${MIGRATION_CASE_EVENT_ID:migrateCase}

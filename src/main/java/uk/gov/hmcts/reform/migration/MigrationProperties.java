@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "migration")
 public class MigrationProperties {
 
+    private String id;
     private String jurisdiction;
     private String caseType;
 

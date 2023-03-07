@@ -1,17 +1,21 @@
 package uk.gov.hmcts.reform.migration.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
+import uk.gov.hmcts.reform.migration.MigrationProperties;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 @Component
+@RequiredArgsConstructor
 public class DataMigrationServiceImpl implements DataMigrationService<Map<String, Object>> {
 
     private static final String MIGRATION_ID_KEY = "migrationId";
-    private static final String MIGRATION_ID_VALUE = "GSMigration";
+
+    private final MigrationProperties migrationProperties;
 
     @Override
     public Predicate<CaseDetails> accepts() {
@@ -23,7 +27,7 @@ public class DataMigrationServiceImpl implements DataMigrationService<Map<String
     private Predicate<CaseDetails> caseAlreadyProcessed() {
 
         return caseDetails -> !caseDetails.getData().containsKey(MIGRATION_ID_KEY)
-            || !caseDetails.getData().getOrDefault(MIGRATION_ID_KEY, "").equals(MIGRATION_ID_VALUE);
+            || !caseDetails.getData().getOrDefault(MIGRATION_ID_KEY, "").equals(migrationProperties.getId());
     }
 
     @Override
@@ -31,6 +35,6 @@ public class DataMigrationServiceImpl implements DataMigrationService<Map<String
         /*
          Populate a map here with data that wants to be present when connecting with the callback service.
         */
-        return Map.of(MIGRATION_ID_KEY, MIGRATION_ID_VALUE);
+        return Map.of(MIGRATION_ID_KEY, migrationProperties.getId());
     }
 }
