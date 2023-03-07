@@ -12,6 +12,10 @@ public class MigrationProperties {
     private String jurisdiction;
     private String caseType;
 
+    private String eventId;
+    private String eventDescription;
+    private String eventSummary;
+
     private Integer maxCasesToProcess;
     private Integer numThreads;
     private boolean dryRun;

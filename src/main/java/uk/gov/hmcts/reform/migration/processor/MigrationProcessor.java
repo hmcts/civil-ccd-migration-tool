@@ -13,9 +13,6 @@ import static java.lang.String.format;
 public interface MigrationProcessor {
     int DEFAULT_MAX_CASES_TO_PROCESS = 100000;
     int DEFAULT_THREAD_LIMIT = 20;
-    String EVENT_ID = "migrateCase";
-    String EVENT_SUMMARY = "Migrate Case";
-    String EVENT_DESCRIPTION = "Migrate Case";
 
     List<Long> migratedCases = new ArrayList<>();
 

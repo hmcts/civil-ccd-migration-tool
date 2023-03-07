@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.migration.query.ElasticSearchQuery;
 import uk.gov.hmcts.reform.migration.service.DataMigrationService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ import static java.util.Optional.ofNullable;
 public class CaseMigrationProcessorES implements MigrationProcessor {
 
     private final AuthTokenGenerator authTokenGenerator;
-    private final DataMigrationService<?> dataMigrationService;
+    private final DataMigrationService<Map<String, Object>> dataMigrationService;
     private final CoreCaseDataService coreCaseDataService;
     private final CoreCaseDataApi coreCaseDataApi;
     private final MigrationProperties migrationProperties;
@@ -159,9 +160,9 @@ public class CaseMigrationProcessorES implements MigrationProcessor {
                     user,
                     caseDetails,
                     migrationProperties.getCaseType(),
-                    EVENT_ID,
-                    EVENT_SUMMARY,
-                    EVENT_DESCRIPTION,
+                    migrationProperties.getEventId(),
+                    migrationProperties.getEventSummary(),
+                    migrationProperties.getEventDescription(),
                     dataMigrationService.migrate(caseDetails)
                 );
                 log.info("Case {} successfully updated", id);
