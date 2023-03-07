@@ -22,6 +22,5 @@ public class CaseIdsFileReader {
             .filter(Objects::nonNull)
             .filter(Predicate.not(String::isEmpty))
             .collect(Collectors.toList());
-
     }
 }
