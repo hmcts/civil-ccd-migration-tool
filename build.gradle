@@ -215,7 +215,7 @@ publishing {
   publications {
     maven(MavenPublication) {
       groupId = 'uk.gov.hmcts.reform'
-      artifactId = 'ccd-case-migration'
+      artifactId = 'civil-ccd-case-migration'
       version = '0.0.1'
 
       from components.java
