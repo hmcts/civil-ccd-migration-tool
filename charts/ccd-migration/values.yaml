@@ -1,5 +1,5 @@
 job:
-  image: 'hmctspublic.azurecr.io/ccd/migration:latest'
+  image: 'hmctspublic.azurecr.io/civil/civil-ccd-case-migration:latest'
   kind: CronJob
   schedule: "0 22 * * *"
   ingressHost: civil-ccd-migration-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
