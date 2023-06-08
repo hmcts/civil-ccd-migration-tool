@@ -24,6 +24,8 @@ docker images
 docker run --name cccm -itd -P cccm:v1
 docker logs cccm
 docker ps -a
+docker images
+docker rm -f $(docker ps -a -q)
 docker rmi -f $(docker images -aq)
 
 docker exec -it cccm sh
