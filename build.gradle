@@ -73,7 +73,7 @@ sonarqube {
   properties {
     property "sonar.projectName", "civil-ccd-case-migration"
     property "sonar.projectKey", "civil-ccd-case-migration"
-    property "sonar.exclusions", "**/exception/*.java,**/domain/*.java,**/processor/*.java,**/migration/auth/AuthTokenGeneratorConfiguration.java,**/migration/CaseMigrationRunner.java,**/ccd/HttpMessageConverterConfiguration.java"
+    property "sonar.exclusions", "**/exception/*.java,**/domain/*.java,**/processor/*.java,**/migration/auth/AuthTokenGeneratorConfiguration.java,**/migration/CaseMigrationRunner.java,**/ccd/HttpMessageConverterConfiguration.java,**/ccd/Jenkinsfile_CNP,**/ccd/Jenkinsfile_nightly,**/ccd/charts/civil-migration/Chart.yml,**/ccd/charts/civil-migration/.helmignore,**/ccd/templates/NOTES.text,**/ccd/templates/values.aat.template.yaml,**/ccd/templates/values.preview.template.yaml,**/ccd/templates/values.yaml,"
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
   }
 }
