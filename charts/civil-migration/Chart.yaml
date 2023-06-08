@@ -1,7 +1,7 @@
 apiVersion: v2
 appVersion: "1.0"
 description: A Helm chart for civil-ccd-migration-tool App
-name: civil-ccd-migration
+name: civil-migration
 home: https://github.com/hmcts/civil-ccd-migration-tool
 version: 0.0.1
 maintainers:
