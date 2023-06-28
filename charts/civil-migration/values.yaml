@@ -1,0 +1,30 @@
+job:
+  image: 'hmctspublic.azurecr.io/civil/migration:latest'
+  kind: CronJob
+  schedule: "0 22 * * *"
+  ingressHost: civil-migration-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+  aadIdentityName: civil
+  # Uncomment once the vault containing the app insights key has been set up
+  keyVaults:
+    ccd:
+      secrets:
+        - name: app-insights-connection-string
+          alias: app-insights-connection-string
+  environment:
+    SPRING_APPLICATION_NAME: civil-ccd-case-migration-tool
+    IDAM_API_URL: http://localhost:5000
+    IDAM_CLIENT_ID: civil
+    IDAM_CLIENT_SECRET: OOOOOOOOOOOOOOOO
+    IDAM_CLIENT_REDIRECT_URI: https://localhost:9000/oauth2/callback
+    CORE_CASE_DATA_API_URL: http://localhost:4452
+    IDAM_USERNAME: civil-system-update@mailnesia.com
+    IDAM_PASSWORD: Password12!
+    MIGRATION_JURISDICTION: Civil
+    MIGRATION_DRY_RUN: false
+    MIGRATION_ID: ResendRPAContinuousFeed
+    MIGRATION_CASE_TYPE: CIVIL
+    MIGRATION_EVENT_ID: NOTIFY_RPA_ON_CONTINUOUS_FEED
+    MIGRATION_EVENT_DESCRIPTION: rerunning RPA continuous feed
+    MIGRATION_EVENT_SUMMARY: rerunning RPA continuous feed
+    LOGGING_LEVEL_ROOT: ERROR
+    LOGGING_LEVEL_UK_GOV_HMCTS_REFORM: INFO

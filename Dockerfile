@@ -6,4 +6,5 @@ COPY lib/applicationinsights.json /opt/app/
 COPY build/libs/civil-ccd-case-migration.jar /opt/app/
 
 EXPOSE 4999
+
 CMD [ "civil-ccd-case-migration.jar" ]
